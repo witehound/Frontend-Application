@@ -1,4 +1,8 @@
-import { createBrowserRouter, RouterProvider, Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { configurationActions } from "./redux/configuration-slice";
+import { useEffect } from "react";
+import { getAppConfig } from "./utils/api";
 
 const router = createBrowserRouter([
   {
@@ -16,6 +20,21 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  const dispatch = useDispatch();
+  const values: any = useSelector((state) => state);
+  const { getConfiguration } = configurationActions;
+
+  useEffect(() => {
+    const fetchAppConfig = async () => {
+      const response = await getAppConfig();
+      if (!values?.configuration.id) {
+        dispatch(getConfiguration(response?.data));
+      }
+    };
+
+    fetchAppConfig();
+  }, []);
+
   return <RouterProvider router={router} />;
 }
 
