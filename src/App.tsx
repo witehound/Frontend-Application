@@ -3,6 +3,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { configurationActions } from "./redux/configuration-slice";
 import { useEffect } from "react";
 import { getAppConfig } from "./utils/api";
+import Product from "./pages/Product";
+import EditProduct from "./pages/EditProduct";
 
 const router = createBrowserRouter([
   {
@@ -11,31 +13,35 @@ const router = createBrowserRouter([
   },
   {
     path: "product",
-    element: <div>pruduct page</div>,
+    element: <Product />,
   },
   {
     path: "product/edit",
-    element: <div>edit</div>,
+    element: <EditProduct />,
   },
 ]);
 
 function App() {
   const dispatch = useDispatch();
   const values: any = useSelector((state) => state);
-  const { getConfiguration } = configurationActions;
+  const { addConfiguration } = configurationActions;
 
   useEffect(() => {
     const fetchAppConfig = async () => {
+      if (values?.configuration.id) return;
       const response = await getAppConfig();
-      if (!values?.configuration.id) {
-        dispatch(getConfiguration(response?.data));
-      }
+
+      dispatch(addConfiguration(response?.data));
     };
 
     fetchAppConfig();
   }, []);
 
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <RouterProvider router={router} />
+    </>
+  );
 }
 
 export default App;

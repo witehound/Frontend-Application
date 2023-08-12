@@ -6,11 +6,11 @@ const configurationSlice = createSlice({
     id: undefined,
     logo: undefined,
     mainColor: undefined,
-    hasUser: false,
+    hasUserSection: false,
   },
   reducers: {
-      getConfiguration(state, actions) {
-          state = actions.payload
+      addConfiguration : (state, actions) => {
+          return actions.payload
     },
   },
 });
